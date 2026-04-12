@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 use PhpParser\Builder\Property;
@@ -32,7 +33,12 @@ Route::prefix('admin')->group(function(){
     Route::get('/dashboard',[AdminController::class,'dashboard'])->name('dashbaord');
     Route::get('/settings',[AdminController::class,'settings'])->name('settings');
 
+    Route::post('/categories',[CategoryController::class,'store'])->name('admin.categories.store');
+    
 });
+
+
+
 
 
 //Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

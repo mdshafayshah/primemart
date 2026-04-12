@@ -1,6 +1,6 @@
 @extends('admin/admin_layout')
 
 @section('content')
-<h1>Admin Categories</h1>
 
+<h1>Create Products</h1>
 @endsection

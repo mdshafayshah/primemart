@@ -1,6 +1,7 @@
 @extends('admin/admin_layout')
 
 @section('content')
-<h1>Admin Categories</h1>
 
-@endsection
+<h1>All Orders</h1>
+
+@endsection 

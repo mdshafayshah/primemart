@@ -1,76 +1,256 @@
-body {
+/* PRIME MART - MODERN ADMIN CSS */
+
+* {
     margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-}
-
-/* Layout */
-.admin-wrapper {
-    display: flex;
-}
-
-/* Sidebar */
-.sidebar {
-    width: 240px;
-    height: 100vh;
-    background: linear-gradient(180deg, #111, #1f1f1f);
-    color: white;
-    padding: 20px;
-}
-
-.logo {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.sidebar ul {
-    list-style: none;
     padding: 0;
+    box-sizing: border-box;
 }
 
-.sidebar ul li {
-    margin: 15px 0;
+body {
+    font-family: 'Inter', sans-serif;
+    background: #f0f2f5;
+    overflow-x: hidden;
 }
 
-.sidebar ul li a {
-    color: #ccc;
-    text-decoration: none;
-    display: block;
-    padding: 10px;
-    border-radius: 8px;
-    transition: 0.3s;
+/* ========== CONTAINER ========== */
+.admin-container {
+    display: flex;
+    min-height: 100vh;
 }
 
-.sidebar ul li a:hover {
-    background: #ffc107;
-    color: black;
+/* ========== SIDEBAR ========== */
+.sidebar {
+    width: 280px;
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    color: #fff;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: fixed;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    overflow-y: auto;
+    box-shadow: 2px 0 20px rgba(0,0,0,0.1);
 }
 
-/* Main Area */
-.main {
-    flex: 1;
-    background: #f5f6fa;
+.sidebar.collapsed {
+    width: 80px;
 }
 
-/* Topbar */
-.topbar {
-    background: white;
-    padding: 15px 20px;
+.sidebar.collapsed .logo-text,
+.sidebar.collapsed .nav-label,
+.sidebar.collapsed .arrow,
+.sidebar.collapsed .dropdown-menu-nav {
+    display: none;
+}
+
+/* Sidebar Header */
+.sidebar-header {
+    padding: 20px;
     display: flex;
     justify-content: space-between;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 20px;
 }
 
-/* Content */
-.content {
-    padding: 20px;
-}
-/* 
-Hide Show */
-.sidebar {
-    width: 240px;
-    transition: 0.3s;
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.3rem;
+    font-weight: 700;
 }
 
-.sidebar.hide {
-    width: 70px;
+.logo-area i {
+    font-size: 1.5rem;
+    color: #00d2ff;
+}
+
+.toggle-btn {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.toggle-btn:hover {
+    background: rgba(255,255,255,0.2);
+    transform: scale(1.05);
+}
+
+/* Navigation */
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav ul li {
+    margin: 5px 15px;
+}
+
+.sidebar-nav ul li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.sidebar-nav ul li a i {
+    font-size: 1.2rem;
+    min-width: 24px;
+}
+
+.sidebar-nav ul li:hover > a,
+.sidebar-nav ul li.active > a {
+    background: rgba(0,210,255,0.15);
+    color: #00d2ff;
+}
+
+.sidebar-nav ul li.logout a {
+    color: #ff6b6b;
+}
+
+.sidebar-nav ul li.logout a:hover {
+    background: rgba(255,107,107,0.15);
+    color: #ff6b6b;
+}
+
+/* Dropdown */
+.has-dropdown .dropdown-toggle {
+    position: relative;
+}
+
+.has-dropdown .arrow {
+    margin-left: auto;
+    transition: transform 0.3s;
+    font-size: 12px;
+}
+
+.has-dropdown.open .arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu-nav {
+    list-style: none;
+    padding-left: 45px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.has-dropdown.open .dropdown-menu-nav {
+    max-height: 300px;
+}
+
+.dropdown-menu-nav li {
+    margin: 0;
+}
+
+.dropdown-menu-nav li a {
+    padding: 10px 15px;
+    font-size: 0.85rem;
+}
+
+.dropdown-menu-nav li a i {
+    font-size: 0.9rem;
+}
+
+/* ========== MAIN CONTENT ========== */
+.main-content {
+    flex: 1;
+    margin-left: 280px;
+    transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 100vh;
+    background: #f0f2f5;
+}
+
+.sidebar.collapsed ~ .main-content {
+    margin-left: 80px;
+}
+
+/* Top Bar */
+.top-bar {
+    background: #fff;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 99;
+}
+
+.page-title h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    color: #1a1a2e;
+}
+
+.profile-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 8px 20px;
+    border-radius: 25px;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.profile-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102,126,234,0.3);
+}
+
+/* Content Area */
+.content-area {
+    padding: 30px;
+}
+
+/* ========== SCROLLBAR ========== */
+.sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: #00d2ff;
+    border-radius: 10px;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        position: fixed;
+    }
+    
+    .sidebar.show-mobile {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 0 !important;
+    }
+    
+    .sidebar.collapsed ~ .main-content {
+        margin-left: 0;
+    }
 }

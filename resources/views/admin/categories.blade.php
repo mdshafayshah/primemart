@@ -11,6 +11,9 @@
                 <div class="field">
                     <label>Category Name</label>
                     <input type="text" id="catName" name="name" class="form-input" placeholder="Enter category name" required>
+                    <div id="iconPreview" style="display: none; margin-top: 8px;">
+                        
+                    </div>
                 </div>
                 <div class="field">
                     <label>Category Icon</label>
@@ -42,8 +45,25 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody id="categoryList">
-                <!-- Categories yahan show hongi -->
+            <tbody>
+                @foreach($categories as $cat)
+                <tr>
+                    <td>
+                        <img src="{{ asset('images/' . $cat->icon) }}" width="40" height="40" style="border-radius: 8px;">
+                    </td>
+
+                    <td>{{ $cat->name }}</td>
+
+                    <td>
+                        {{ $cat->products->count() }}
+                    </td>
+
+                    <td>
+                        <button class="edit-btn">Edit</button>
+                        <button class="delete-btn">Delete</button>
+                    </td>
+                </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
@@ -65,7 +85,7 @@
     // function showCategories() {
     //     let search = document.getElementById('searchInput').value.toLowerCase();
     //     let filtered = categories.filter(c => c.name.toLowerCase().includes(search));
-        
+
     //     let html = '';
     //     for (let cat of filtered) {
     //         html += `
@@ -79,11 +99,11 @@
     //             </tr>
     //         `;
     //     }
-        
+
     //     if (filtered.length === 0) {
     //         html = '<tr><td colspan="3" class="empty-row">No categories found</td></tr>';
     //     }
-        
+
     //     document.getElementById('categoryList').innerHTML = html;
     // }
 
@@ -97,13 +117,13 @@
     //         alert('Please select category icon');
     //         return false;
     //     }
-        
+
     //     categories.push({
     //         id: nextId++,
     //         name: name,
     //         icon: iconData
     //     });
-        
+
     //     showCategories();
     //     return true;
     // }
@@ -147,21 +167,21 @@
     // // Form Submit
     // document.getElementById('categoryForm').addEventListener('submit', function(e) {
     //    // e.preventDefault();
-        
+
     //     let name = document.getElementById('catName').value.trim();
-        
+
     //     if (!name) {
     //         alert('Please enter category name');
     //         return;
     //     }
-        
+
     //     if (!selectedIcon) {
     //         alert('Please select category icon');
     //         return;
     //     }
-        
+
     //     addCategory(name, selectedIcon);
-        
+
     //     // Reset form
     //     document.getElementById('catName').value = '';
     //     iconInput.value = '';

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 use PhpParser\Builder\Property;
@@ -32,9 +33,22 @@ Route::prefix('admin')->group(function(){
     Route::get('/createproducts',[AdminController::class,'create_products'])->name('createproducts');
     Route::get('/dashboard',[AdminController::class,'dashboard'])->name('dashbaord');
     Route::get('/settings',[AdminController::class,'settings'])->name('settings');
-
+    //Add Category into DB
     Route::post('/categories',[CategoryController::class,'store'])->name('admin.categories.store');
+    //Edit Category into DB
     
+    Route::post('/categories/update/{id}',[CategoryController::class,'update'])->name('admin.categories.update');
+    //Destroy category
+    Route::get('/categories/delete/{id}',[CategoryController::class,'destroy'])->name('admin.categories.delete');
+
+    //Products Controller Resource controller
+    //Add Products
+    Route::resource('products',ProductController::class);
+
+
+
+
+
 });
 
 

@@ -12,7 +12,7 @@
                     <label>Category Name</label>
                     <input type="text" id="catName" name="name" class="form-input" placeholder="Enter category name" required>
                     <div id="iconPreview" style="display: none; margin-top: 8px;">
-                        
+
                     </div>
                 </div>
                 <div class="field">
@@ -31,17 +31,17 @@
 
     <!-- Search Bar -->
     <div class="search-bar">
-        <input type="text" id="searchInput" class="search-input" placeholder="Search categories...">
+        <input type="text" id="searchInput" class="search-input" oninput="searchCategory()"  placeholder="Search categories...">
     </div>
 
     <!-- Category Table List -->
     <div class="table-container">
-        <table class="category-table">
-            <thead>
+        <table class="table category-table  table-striped table-bordered" >
+            <thead >
                 <tr>
                     <th>Icon</th>
-                    <th>Category Name</th>
-                    <th>Total Products</th>
+                    <th  onclick="sortTable()"><span class="sort-icon">Category Name &nbsp;⬍</span></th>
+                    <th  onclick="sortTable()"><span class="sort-icon">Total Products &nbsp;⬍</span></th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -59,8 +59,17 @@
                     </td>
 
                     <td>
-                        <button class="edit-btn">Edit</button>
-                        <button class="delete-btn">Delete</button>
+                        <button class="edit-btn"
+                            data-id="{{ $cat->id }}"
+                            data-name="{{ $cat->name }}"
+                            onclick="openModal(this)">
+                            <i class="fa fa-pencil"></i>
+                        </button>
+                        <a href="{{ route('admin.categories.delete', $cat->id) }}"
+                            class="delete-btn"
+                            onclick="return confirm('Are you sure?')">
+                            <i class="fa fa-trash"></i>
+                        </a>
                     </td>
                 </tr>
                 @endforeach
@@ -69,133 +78,114 @@
     </div>
 
 </div>
+<!-- EDIT CATEGORY MODAL -->
+<!-- MODAL OVERLAY -->
+<div id="editModal" class="modal modal-dialog-centered modal-overlay">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+            <h3>Edit Category</h3>
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+        </div>
+
+        <form id="editForm" method="POST" enctype="multipart/form-data">
+            @csrf
+
+            <div class="form-group">
+                <label>Category Name</label>
+                <input type="text" id="editName" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Change Icon</label>
+                <input type="file" name="icon">
+            </div>
+
+            <div class="modal-actions">
+                <button type="submit" class="btn update-btn">Update</button>
+                <button type="button" class="btn cancel-btn" onclick="closeModal()">Cancel</button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
 
 <script>
-    // // Categories Data
-    // let categories = [
-    //     { id: 1, name: 'Electronics', icon: 'https://via.placeholder.com/40/3498db/white?text=📱' },
-    //     { id: 2, name: 'Clothing', icon: 'https://via.placeholder.com/40/e74c3c/white?text=👕' },
-    //     { id: 3, name: 'Accessories', icon: 'https://via.placeholder.com/40/f39c12/white?text=🎧' }
-    // ];
+    //edit button 
+    function openModal(btn) {
 
-    // let nextId = 4;
-    // let selectedIcon = null;
+        let id = btn.getAttribute('data-id');
+        let name = btn.getAttribute('data-name');
 
-    // // Show Categories in Table
-    // function showCategories() {
-    //     let search = document.getElementById('searchInput').value.toLowerCase();
-    //     let filtered = categories.filter(c => c.name.toLowerCase().includes(search));
+        document.getElementById('editModal').style.display = 'flex';
+        document.getElementById('editName').value = name;
 
-    //     let html = '';
-    //     for (let cat of filtered) {
-    //         html += `
-    //             <tr>
-    //                 <td class="icon-cell"><img src="${cat.icon}" width="40" height="40" style="border-radius: 8px;"></td>
-    //                 <td class="name-cell">${cat.name}</td>
-    //                 <td class="actions-cell">
-    //                     <button class="edit-btn" onclick="editCat(${cat.id})">✏️ Edit</button>
-    //                     <button class="delete-btn" onclick="deleteCat(${cat.id})">🗑️ Delete</button>
-    //                 </td>
-    //             </tr>
-    //         `;
-    //     }
+        document.getElementById('editForm').action = '/admin/categories/update/' + id;
+    }
+    //Close Modal
+    function closeModal() {
+        document.getElementById('editModal').style.display = 'none';
+    }
+    //Search Query
+   function searchCategory() {
 
-    //     if (filtered.length === 0) {
-    //         html = '<tr><td colspan="3" class="empty-row">No categories found</td></tr>';
-    //     }
+    let input = document.getElementById('searchInput').value.toLowerCase();
+    let rows = document.querySelectorAll('.category-table tbody tr');
 
-    //     document.getElementById('categoryList').innerHTML = html;
-    // }
+    // 👉 Agar input empty hai → sab show
+    if (input === '') {
+        rows.forEach(function(row) {
+            row.style.display = '';
+        });
+        return;
+    }
 
-    // // Add Category
-    // function addCategory(name, iconData) {
-    //     if (!name) {
-    //         alert('Please enter category name');
-    //         return false;
-    //     }
-    //     if (!iconData) {
-    //         alert('Please select category icon');
-    //         return false;
-    //     }
+    // 👉 Normal search
+    rows.forEach(function(row) {
 
-    //     categories.push({
-    //         id: nextId++,
-    //         name: name,
-    //         icon: iconData
-    //     });
+            let name = row.cells[1].innerText.toLowerCase();
 
-    //     showCategories();
-    //     return true;
-    // }
+            if (name.includes(input)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
 
-    // // Edit Category
-    // function editCat(id) {
-    //     let cat = categories.find(c => c.id === id);
-    //     let newName = prompt('Edit category name:', cat.name);
-    //     if (newName && newName.trim()) {
-    //         cat.name = newName.trim();
-    //         showCategories();
-    //     }
-    // }
+        });
+    }
+    //Sort Table
+    let asc = true; // toggle ke liye
 
-    // // Delete Category
-    // function deleteCat(id) {
-    //     if (confirm('Delete this category?')) {
-    //         categories = categories.filter(c => c.id !== id);
-    //         showCategories();
-    //     }
-    // }
+    function sortTable() {
 
-    // // Image Upload Preview
-    // const iconInput = document.getElementById('catIcon');
-    // const iconPreview = document.getElementById('iconPreview');
-    // const previewImg = document.getElementById('previewImg');
+        let table = document.querySelector(".category-table tbody");
+        let rows = Array.from(table.rows);
 
-    // iconInput.addEventListener('change', function(e) {
-    //     let file = e.target.files[0];
-    //     if (file) {
-    //         let reader = new FileReader();
-    //         reader.onload = function(e) {
-    //             selectedIcon = e.target.result;
-    //             previewImg.src = selectedIcon;
-    //             iconPreview.style.display = 'block';
-    //         };
-    //         reader.readAsDataURL(file);
-    //     }
-    // });
+        rows.sort(function(a, b) {
 
-    // // Form Submit
-    // document.getElementById('categoryForm').addEventListener('submit', function(e) {
-    //    // e.preventDefault();
+            let nameA = a.cells[1].innerText.toLowerCase();
+            let nameB = b.cells[1].innerText.toLowerCase();
 
-    //     let name = document.getElementById('catName').value.trim();
+            if (asc) {
+                return nameA.localeCompare(nameB);
+            } else {
+                return nameB.localeCompare(nameA);
+            }
 
-    //     if (!name) {
-    //         alert('Please enter category name');
-    //         return;
-    //     }
+        });
 
-    //     if (!selectedIcon) {
-    //         alert('Please select category icon');
-    //         return;
-    //     }
+        // toggle direction
+        asc = !asc;
 
-    //     addCategory(name, selectedIcon);
+        // rows dobara append karo
+        rows.forEach(function(row) {
+            table.appendChild(row);
+        });
+    }
 
-    //     // Reset form
-    //     document.getElementById('catName').value = '';
-    //     iconInput.value = '';
-    //     selectedIcon = null;
-    //     iconPreview.style.display = 'none';
-    //     previewImg.src = '';
-    // });
 
-    // // Search
-    // document.getElementById('searchInput').addEventListener('keyup', function() {
-    //     showCategories();
-    // });
 
-    // // Initial Load
-    // showCategories();
 </script>
 @endsection

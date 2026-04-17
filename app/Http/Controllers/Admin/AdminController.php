@@ -23,7 +23,8 @@ class AdminController extends Controller
         return view('admin.categories', compact('categories'));
     }
     public function create_products(){
-        return view('admin.create_products');
+        $categories = Category::all();
+        return view('admin.create_products', compact('categories'));
     }
     public function dashboard(){
         return view('admin.dashboard');
